@@ -10,10 +10,13 @@ setup:
 	    php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=bin/ --filename=composer
     endif
 	$(composer-install)
+	$(docker) php bin/composer dump-autoload
+	$(docker) php bin/composer self-update
+	$(docker) php bin/composer update
     ifeq ($(wildcard .env),)
 	    cp .env.example .env
-	    $(docker) php artisan key:generate
     endif
+	$(docker) php artisan key:generate
 	$(migrate)
 
 up:
